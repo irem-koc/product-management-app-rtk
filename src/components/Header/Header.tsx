@@ -1,9 +1,11 @@
+import { useGetCategoriesQuery } from "@/api/categoriesApi";
 import { FilterProps } from "@/types/Header.types";
 import React, { useState } from "react";
 import { Link } from "react-router";
 
 const Header: React.FC<FilterProps> = ({ onSearch, onFilterChange }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { data: categories } = useGetCategoriesQuery();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -16,8 +18,8 @@ const Header: React.FC<FilterProps> = ({ onSearch, onFilterChange }) => {
 
   return (
     <header className="bg-gray-800 p-4">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link to={"/"}>
+      <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap">
+        <Link to={"/"} className="flex items-center mb-4 sm:mb-0">
           <h1 className="text-white text-3xl font-bold flex items-center">
             <img
               src="/image.webp"
@@ -28,7 +30,7 @@ const Header: React.FC<FilterProps> = ({ onSearch, onFilterChange }) => {
           </h1>
         </Link>
 
-        <div className="flex-1 ml-4">
+        <div className="w-full sm:w-2/5 ml-4 mb-4 sm:mb-0">
           <input
             type="text"
             value={searchTerm}
@@ -38,15 +40,21 @@ const Header: React.FC<FilterProps> = ({ onSearch, onFilterChange }) => {
           />
         </div>
 
-        <div className="ml-4">
+        <div className="w-full sm:w-auto ml-4 mb-4 sm:mb-0">
           <select
             onChange={handleFilterChange}
-            className="bg-gray-100 p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="bg-gray-100 p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
           >
-            <option value="">All Products</option>
-            <option value="electronics">Electronics</option>
-            <option value="clothing">Clothing</option>
-            <option value="furniture">Furniture</option>
+            <option value={"all"}>All Products</option>
+            {categories &&
+              categories.map((category: string) => {
+                return (
+                  <option key={category} value={category}>
+                    {category.charAt(0).toUpperCase() +
+                      String(category).slice(1)}
+                  </option>
+                );
+              })}
           </select>
         </div>
       </div>
