@@ -2,36 +2,24 @@ import { useGetProductsQuery } from "@/api/productsApi";
 import Pagination from "@/components/Pagination/Pagination";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import { Product } from "@/types/types";
+import { useNavigate } from "react-router";
 
 const ProductList = () => {
-  const { data: products, error } = useGetProductsQuery();
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-lg font-medium text-red-600">
-          Error: {error.message}
-        </p>
-      </div>
-    );
-  }
-
-  if (!products || products.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-lg font-medium text-gray-600">
-          No products available.
-        </p>
-      </div>
-    );
-  }
-
+  const { data: products } = useGetProductsQuery();
+  const navigateTo = useNavigate();
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-        Product List
-      </h1>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800">Product List</h1>
+        <button
+          onClick={() => navigateTo("/products/add")}
+          className="px-4 py-2 bg-white text-green-500 border border-green-500 font-semibold rounded-lg shadow-md hover:shadow-2xl hover:shadow-inner hover:bg-green-500 hover:text-white transform hover:scale-105 transition-all duration-300"
+        >
+          Yeni Ürün Ekle
+        </button>
+      </div>
+
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products?.map((productItem: Product) => (
           <li key={productItem.id}>
             <ProductCard {...productItem} />
