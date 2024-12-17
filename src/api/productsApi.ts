@@ -1,9 +1,11 @@
-import { emptySplitApi } from "./emptySplitApi";
+import { apiWithTag } from "./emptySplitApi";
 
-export const productsApi = emptySplitApi.injectEndpoints({
+export const productsApi = apiWithTag.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: () => "products",
+      // @ts-expect-error
+      providesTags: ["Products"],
     }),
   }),
 });
