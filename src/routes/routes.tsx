@@ -1,9 +1,9 @@
+import Layout from "@/layouts/Layout";
+import ProductAdd from "@/pages/ProductAdd/ProductAdd";
+import ProductDetail from "@/pages/ProductDetail/ProductDetail";
+import ProductEdit from "@/pages/ProductEdit/ProductEdit";
+import ProductList from "@/pages/ProductList/ProductList";
 import { RouteObject } from "react-router";
-import Layout from "../layouts/Layout";
-import ProductAdd from "../pages/ProductAdd/ProductAdd";
-import ProductDetail from "../pages/ProductDetail/ProductDetail";
-import ProductEdit from "../pages/ProductEdit/ProductEdit";
-import ProductList from "../pages/ProductList/ProductList";
 
 const routes: RouteObject[] = [
   {
@@ -21,8 +21,8 @@ const routes: RouteObject[] = [
           {
             path: ":id",
             element: <ProductDetail />,
-            children: [{ path: "edit", element: <ProductEdit /> }],
           },
+          { path: ":id/edit", element: <ProductEdit /> },
         ],
       },
     ],
