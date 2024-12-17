@@ -14,7 +14,7 @@ const ProductCard: React.FC<Product> = ({
 }) => {
   return (
     <Link to={`/products/${id}`}>
-      <div className="max-w-sm h-[700px] p-4 border rounded-lg shadow-md bg-white transform transition duration-300 hover:scale-105 hover:shadow-lg hover:cursor-pointer">
+      <div className="max-w-sm h-[740px] p-4 border rounded-lg shadow-md bg-white transform transition duration-300 hover:scale-105 hover:shadow-lg hover:cursor-pointer">
         <img
           src={image}
           alt={title}
