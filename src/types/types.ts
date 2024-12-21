@@ -11,4 +11,5 @@ export type Product = {
   };
   stockAvailable: number;
   isFavorite: boolean;
+  quantity?: number;
 };
