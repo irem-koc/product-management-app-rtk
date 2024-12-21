@@ -9,4 +9,6 @@ export type Product = {
     rate: number;
     count: number;
   };
+  stockAvailable: number;
+  isFavorite: boolean;
 };
