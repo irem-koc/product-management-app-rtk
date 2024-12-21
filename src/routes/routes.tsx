@@ -4,6 +4,7 @@ import ProductDetail from "@/pages/ProductDetail/ProductDetail";
 import ProductEdit from "@/pages/ProductEdit/ProductEdit";
 import ProductList from "@/pages/ProductList/ProductList";
 import { RouteObject } from "react-router";
+import Cart from "../pages/Cart/Cart";
 
 const routes: RouteObject[] = [
   {
@@ -24,6 +25,10 @@ const routes: RouteObject[] = [
           },
           { path: ":id/edit", element: <ProductEdit /> },
         ],
+      },
+      {
+        path: "cart",
+        children: [{ index: true, element: <Cart /> }],
       },
     ],
   },
