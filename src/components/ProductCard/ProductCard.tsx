@@ -2,6 +2,8 @@ import { Product } from "@/types/types";
 import React, { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router";
+import { addToCart } from "../../features/productsSlice";
+import { useAppDispatch } from "../../store/hook";
 
 const ProductCard: React.FC<Product> = ({
   id,
@@ -14,11 +16,8 @@ const ProductCard: React.FC<Product> = ({
   stockAvailable,
   isFavorite,
 }) => {
+  const dispatch = useAppDispatch();
   const [showFullDescription, setShowFullDescription] = useState(false);
-
-  const handleAddToCart = () => {
-    console.log(`Product with id: ${id} added to cart`);
-  };
 
   const toggleFavorite = () => {
     console.log(`Product with id: ${id} favorited`);
@@ -28,6 +27,22 @@ const ProductCard: React.FC<Product> = ({
     setShowFullDescription(!showFullDescription);
   };
 
+  const handleAddToCart = () => {
+    console.log(`Product with id: ${id} added to cart`);
+    dispatch(
+      addToCart({
+        id,
+        image,
+        title,
+        category,
+        rating,
+        description,
+        price,
+        stockAvailable,
+        isFavorite,
+      })
+    );
+  };
   return (
     <Link to={`#`}>
       <div className="overflow-scroll flex flex-col items-start justify-between max-w-sm h-[780px] p-4 border rounded-lg shadow-md bg-white transform transition duration-300 hover:scale-105 hover:shadow-lg hover:cursor-pointer">
