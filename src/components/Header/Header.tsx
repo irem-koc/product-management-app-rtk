@@ -1,9 +1,9 @@
-import { useGetCategoriesQuery } from "@/api/categoriesApi";
-import { FilterProps } from "@/types/Header.types";
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { GiShoppingCart } from "react-icons/gi";
+import { Link } from "react-router"; // Changed to react-router-dom
+import { useGetCategoriesQuery } from "../../api/categoriesApi";
 
-const Header: React.FC<FilterProps> = ({ onSearch, onFilterChange }) => {
+const Header = ({ onSearch, onFilterChange }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: categories } = useGetCategoriesQuery();
 
@@ -57,6 +57,16 @@ const Header: React.FC<FilterProps> = ({ onSearch, onFilterChange }) => {
               })}
           </select>
         </div>
+
+        <Link
+          to="/cart"
+          className="relative flex items-center text-white ml-4 hover:text-indigo-500"
+        >
+          <GiShoppingCart className="w-12 h-8" />
+          <span className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            3
+          </span>
+        </Link>
       </div>
     </header>
   );
