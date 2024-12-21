@@ -1,11 +1,12 @@
 import { useGetProductsQuery } from "@/api/productsApi";
 import Pagination from "@/components/Pagination/Pagination";
-import ProductCard from "@/components/ProductCard/ProductCard";
-import { Product } from "@/types/types";
 import { useNavigate } from "react-router";
+import ProductCard from "../../components/ProductCard/ProductCard";
+import { useAppSelector } from "../../store/hook";
 
 const ProductList = () => {
-  const { data: products } = useGetProductsQuery();
+  const { data } = useGetProductsQuery();
+  const products = useAppSelector((state) => state.products);
   const navigateTo = useNavigate();
   return (
     <div className="p-6">
@@ -20,11 +21,12 @@ const ProductList = () => {
       </div>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products?.map((productItem: Product) => (
-          <li key={productItem.id}>
-            <ProductCard {...productItem} />
-          </li>
-        ))}
+        {products &&
+          products?.products?.map((productItem: Product) => (
+            <li key={productItem.id}>
+              <ProductCard {...productItem} />
+            </li>
+          ))}
       </ul>
       <Pagination />
     </div>
