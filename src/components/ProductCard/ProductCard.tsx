@@ -1,6 +1,6 @@
 import { Product } from "@/types/types";
 import React, { useState } from "react";
-import { FaHeart, FaRegHeart } from "react-icons/fa"; // Import FaHeart for the favorite icon
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router";
 
 const ProductCard: React.FC<Product> = ({
@@ -14,7 +14,6 @@ const ProductCard: React.FC<Product> = ({
   stockAvailable,
   isFavorite,
 }) => {
-  // const [isFavorite, setIsFavorite] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   const handleAddToCart = () => {
@@ -22,7 +21,6 @@ const ProductCard: React.FC<Product> = ({
   };
 
   const toggleFavorite = () => {
-    // setIsFavorite(!isFavorite);
     console.log(`Product with id: ${id} favorited`);
   };
 
@@ -42,7 +40,6 @@ const ProductCard: React.FC<Product> = ({
           {title}
         </h2>
 
-        {/* Description Section */}
         <p
           className={`text-gray-600 text-sm mt-2 line-clamp-2 transition-colors duration-300 ${
             showFullDescription ? "line-clamp-none" : "line-clamp-2"
@@ -51,7 +48,6 @@ const ProductCard: React.FC<Product> = ({
           {description}
         </p>
 
-        {/* Show More Button */}
         {description.length > 100 && (
           <button
             onClick={toggleDescription}
@@ -76,12 +72,10 @@ const ProductCard: React.FC<Product> = ({
           </span>
         </div>
 
-        {/* Stock Status - Tag */}
         <div className="absolute top-4 left-4 bg-green-600 text-white text-sm font-bold py-1 px-3 rounded-full">
           {stockAvailable > 0 ? "Available" : "Not Available"}
         </div>
 
-        {/* Add to Cart Button */}
         {stockAvailable > 0 && (
           <button
             onClick={handleAddToCart}
@@ -91,7 +85,6 @@ const ProductCard: React.FC<Product> = ({
           </button>
         )}
 
-        {/* Favorite Button */}
         <button
           onClick={toggleFavorite}
           className="absolute top-4 right-4 text-red-600 hover:text-red-800 transition-colors duration-300"
