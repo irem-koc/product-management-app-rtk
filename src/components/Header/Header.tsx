@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GiShoppingCart } from "react-icons/gi";
-import { Link } from "react-router"; // Changed to react-router-dom
+import { Link } from "react-router";
 import { useGetCategoriesQuery } from "../../api/categoriesApi";
+import { handleFilter } from "../../features/productsSlice";
+import { useAppDispatch } from "../../store/hook";
 
-const Header = ({ onSearch, onFilterChange }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+const Header = () => {
+  const [filter, setFilter] = useState({
+    search: "",
+    category: "",
+  });
+  const dispatch = useAppDispatch();
   const { data: categories } = useGetCategoriesQuery();
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    onSearch(e.target.value);
-  };
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onFilterChange(e.target.value);
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilter((prevState) => {
+      const updatedFilter = { ...prevState, [name]: value };
+      setTimeout(() => {
+        dispatch(handleFilter(updatedFilter));
+      }, 2000);
+      return updatedFilter;
+    });
   };
 
   return (
@@ -32,9 +40,10 @@ const Header = ({ onSearch, onFilterChange }) => {
 
         <div className="w-full sm:w-2/5 ml-4 mb-4 sm:mb-0">
           <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
+            name="search"
+            type="search"
+            value={filter.search}
+            onChange={handleFilterChange}
             placeholder="Search products..."
             className="w-full p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
@@ -42,7 +51,9 @@ const Header = ({ onSearch, onFilterChange }) => {
 
         <div className="w-full sm:w-auto ml-4 mb-4 sm:mb-0">
           <select
+            name="category"
             onChange={handleFilterChange}
+            value={filter.category}
             className="bg-gray-100 p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
           >
             <option value={"all"}>All Products</option>
