@@ -1,16 +1,21 @@
-import { productsApi } from "@/api/productsApi";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Product } from "../types/types";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { productsApi } from "../api/productsApi";
+import { Category, Product } from "../types/types";
 
 interface ProductState {
-  filter: string;
+  filter: Category;
   products: Product[];
+  filteredProducts: Product[];
   carts: (Product & { quantity: number })[];
 }
 
 const initialState: ProductState = {
-  filter: "",
+  filter: {
+    category: "",
+    search: "",
+  },
   products: [],
+  filteredProducts: [],
   carts: [],
 };
 
@@ -18,8 +23,20 @@ const productSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    setFilter: (state, action: PayloadAction<string>) => {
+    handleFilter: (state, action: PayloadAction<Category>) => {
       state.filter = action.payload;
+      state.filteredProducts = state.products.filter((product) => {
+        const matchesCategory =
+          action.payload.category && action.payload.category !== "all"
+            ? product.category === action.payload.category
+            : true;
+        const matchesSearch = action.payload.search
+          ? product.title
+              .toLowerCase()
+              .includes(action.payload.search.toLowerCase())
+          : true;
+        return matchesCategory && matchesSearch;
+      });
     },
 
     addToCart: (state, action: PayloadAction<Product>) => {
@@ -44,10 +61,11 @@ const productSlice = createSlice({
           stockAvailable: Math.floor(Math.random() * 20) + 1,
           isFavorite: false,
         }));
+        state.filteredProducts = state.products;
       }
     );
   },
 });
 
-export const { setFilter, addToCart } = productSlice.actions;
+export const { handleFilter, addToCart } = productSlice.actions;
 export default productSlice.reducer;
