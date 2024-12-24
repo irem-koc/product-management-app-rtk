@@ -13,3 +13,7 @@ export type Product = {
   isFavorite: boolean;
   quantity?: number;
 };
+export type Category = {
+  category: string;
+  search: string;
+};
