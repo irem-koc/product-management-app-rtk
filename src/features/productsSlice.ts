@@ -6,20 +6,17 @@ interface ProductState {
   filter: Category;
   products: Product[];
   filteredProducts: Product[];
-  carts: (Product & { quantity: number })[];
+  loading: boolean;
 }
 
 const initialState: ProductState = {
-  filter: {
-    category: "",
-    search: "",
-  },
+  filter: { category: "", search: "" },
   products: [],
   filteredProducts: [],
-  carts: [],
+  loading: false,
 };
 
-const productSlice = createSlice({
+const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
@@ -39,16 +36,25 @@ const productSlice = createSlice({
       });
     },
 
-    addToCart: (state, action: PayloadAction<Product>) => {
-      const existingCartItem = state.carts.find(
-        (cart) => cart.id === action.payload.id
-      );
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
 
-      if (existingCartItem && action.payload.stockAvailable > 0) {
-        existingCartItem.quantity += 1;
-        existingCartItem.stockAvailable -= 1;
-      } else if (action.payload.stockAvailable > 0) {
-        state.carts.push({ ...action.payload, quantity: 1 });
+    handleFilterStart: (state) => {
+      state.loading = true;
+    },
+
+    handleFilterSuccess: (state) => {
+      state.loading = false;
+    },
+
+    updateProductStock: (
+      state,
+      action: PayloadAction<{ id: number; stockAvailable: number }>
+    ) => {
+      const product = state.products.find((p) => p.id === action.payload.id);
+      if (product) {
+        product.stockAvailable = action.payload.stockAvailable;
       }
     },
   },
@@ -56,16 +62,28 @@ const productSlice = createSlice({
     builder.addMatcher(
       productsApi.endpoints.getProducts.matchFulfilled,
       (state, action) => {
-        state.products = action.payload.map((item: Product) => ({
-          ...item,
-          stockAvailable: Math.floor(Math.random() * 20) + 1,
-          isFavorite: false,
-        }));
-        state.filteredProducts = state.products;
+        if (Array.isArray(action.payload)) {
+          state.products = action.payload.map((item: Product) => ({
+            ...item,
+            stockAvailable: Math.floor(Math.random() * 20) + 1,
+          }));
+
+          state.filteredProducts = state.products;
+        } else {
+          state.products = [];
+          state.filteredProducts = [];
+        }
       }
     );
   },
 });
 
-export const { handleFilter, addToCart } = productSlice.actions;
-export default productSlice.reducer;
+export const {
+  handleFilter,
+  setLoading,
+  handleFilterStart,
+  handleFilterSuccess,
+  updateProductStock,
+} = productsSlice.actions;
+
+export default productsSlice.reducer;
