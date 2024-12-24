@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { GiShoppingCart } from "react-icons/gi";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useGetCategoriesQuery } from "../../api/categoriesApi";
-import { handleFilter } from "../../features/productsSlice";
-import { useAppDispatch } from "../../store/hook";
+import {
+  handleFilter,
+  handleFilterStart,
+  handleFilterSuccess,
+} from "../../features/productsSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hook";
 
 const Header = () => {
+  const { items: carts } = useAppSelector((state) => state.carts);
   const [filter, setFilter] = useState({
     search: "",
     category: "",
@@ -13,12 +18,18 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const { data: categories } = useGetCategoriesQuery();
 
-  const handleFilterChange = (e) => {
+  const location = useLocation();
+
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFilter((prevState) => {
       const updatedFilter = { ...prevState, [name]: value };
+      dispatch(handleFilterStart());
       setTimeout(() => {
         dispatch(handleFilter(updatedFilter));
+        dispatch(handleFilterSuccess());
       }, 2000);
       return updatedFilter;
     });
@@ -38,36 +49,38 @@ const Header = () => {
           </h1>
         </Link>
 
-        <div className="w-full sm:w-2/5 ml-4 mb-4 sm:mb-0">
-          <input
-            name="search"
-            type="search"
-            value={filter.search}
-            onChange={handleFilterChange}
-            placeholder="Search products..."
-            className="w-full p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+        {location.pathname === "/" && (
+          <>
+            <div className="w-full sm:w-2/5 ml-4 mb-4 sm:mb-0">
+              <input
+                name="search"
+                type="search"
+                value={filter.search}
+                onChange={handleFilterChange}
+                placeholder="Search products..."
+                className="w-full p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
 
-        <div className="w-full sm:w-auto ml-4 mb-4 sm:mb-0">
-          <select
-            name="category"
-            onChange={handleFilterChange}
-            value={filter.category}
-            className="bg-gray-100 p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
-          >
-            <option value={"all"}>All Products</option>
-            {categories &&
-              categories.map((category: string) => {
-                return (
-                  <option key={category} value={category}>
-                    {category.charAt(0).toUpperCase() +
-                      String(category).slice(1)}
-                  </option>
-                );
-              })}
-          </select>
-        </div>
+            <div className="w-full sm:w-auto ml-4 mb-4 sm:mb-0">
+              <select
+                name="category"
+                onChange={handleFilterChange}
+                value={filter.category}
+                className="bg-gray-100 p-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
+              >
+                <option value={"all"}>All Products</option>
+                {categories &&
+                  categories.map((category: string) => (
+                    <option key={category} value={category}>
+                      {category.charAt(0).toUpperCase() +
+                        String(category).slice(1)}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </>
+        )}
 
         <Link
           to="/cart"
@@ -75,7 +88,7 @@ const Header = () => {
         >
           <GiShoppingCart className="w-12 h-8" />
           <span className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-            3
+            {carts?.length}
           </span>
         </Link>
       </div>
