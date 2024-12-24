@@ -57,7 +57,14 @@ const Cart: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="text-center">
+        <div className="flex flex-col items-center ">
+          <iframe
+            src="https://giphy.com/embed/P3nySwO6c57mUVoSI8"
+            width="480"
+            height="480"
+            frameBorder="0"
+            allowFullScreen
+          />
           <p className="text-lg text-gray-500">Sepetiniz boş.</p>
         </div>
       )}
