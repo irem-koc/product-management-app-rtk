@@ -1,15 +1,16 @@
+import { useGetProductsQuery } from "@/api/productsApi";
 import Pagination from "@/components/Pagination/Pagination";
 import { useNavigate } from "react-router";
 import NoProductFound from "../../components/NoProductFound/NoProductFound";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import { selectFilteredProducts } from "../../features/productsSlice";
 import { useAppSelector } from "../../store/hook";
 import { Product } from "../../types/types";
 
 const ProductList = () => {
-  const filteredProducts = useAppSelector(selectFilteredProducts);
-  const navigateTo = useNavigate();
+  const { data, isSuccess } = useGetProductsQuery();
+  const { filteredProducts } = useAppSelector((state) => state.products);
 
+  const navigateTo = useNavigate();
   return (
     <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
@@ -21,19 +22,25 @@ const ProductList = () => {
           Yeni Ürün Ekle
         </button>
       </div>
-      {filteredProducts?.length > 0 ? (
+      {isSuccess && (
         <>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((productItem: Product) => (
-              <li key={productItem.id}>
-                <ProductCard {...productItem} />
-              </li>
-            ))}
-          </ul>
-          <Pagination />
+          {filteredProducts?.length > 0 ? (
+            <>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {filteredProducts.map((productItem: Product) => (
+                  <>
+                    <li key={productItem.id}>
+                      <ProductCard {...productItem} />
+                    </li>
+                  </>
+                ))}
+              </ul>
+              <Pagination />
+            </>
+          ) : (
+            <NoProductFound />
+          )}
         </>
-      ) : (
-        <NoProductFound />
       )}
     </div>
   );
