@@ -52,7 +52,7 @@ const ProductDetail: React.FC = () => {
                 ({product?.rating.count} yorum)
               </span>
             </div>
-            <p className="text-sm text-gray-500">
+            {/* <p className="text-sm text-gray-500">
               Stok Durumu:{" "}
               <span
                 className={`font-medium ${
@@ -75,7 +75,7 @@ const ProductDetail: React.FC = () => {
               >
                 {product?.isFavorite ? "Favorilere eklenmiş" : "Favoride değil"}
               </span>
-            </p>
+            </p> */}
           </div>
         </div>
 
