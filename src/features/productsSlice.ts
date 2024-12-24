@@ -52,7 +52,9 @@ const productsSlice = createSlice({
       state,
       action: PayloadAction<{ id: number; stockAvailable: number }>
     ) => {
-      const product = state.products.find((p) => p.id === action.payload.id);
+      const product = state.filteredProducts.find(
+        (p) => p.id === action.payload.id
+      );
       if (product) {
         product.stockAvailable = action.payload.stockAvailable;
       }
