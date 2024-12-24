@@ -69,7 +69,18 @@ const productsSlice = createSlice({
             ...item,
             stockAvailable: Math.floor(Math.random() * 20) + 1,
           }));
-
+          state.filteredProducts = state.products.filter((product) => {
+            const matchesCategory =
+              action.payload.category && action.payload.category !== "all"
+                ? product.category === action.payload.category
+                : true;
+            const matchesSearch = action.payload.search
+              ? product.title
+                  .toLowerCase()
+                  .includes(action.payload.search.toLowerCase())
+              : true;
+            return matchesCategory && matchesSearch;
+          });
           state.filteredProducts = state.products;
         } else {
           state.products = [];
