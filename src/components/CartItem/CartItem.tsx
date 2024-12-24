@@ -1,6 +1,10 @@
 import React from "react";
 
-import { decreaseQuantity, increaseQuantity } from "../../features/cartSlice";
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+} from "../../features/cartSlice";
 import { updateProductStock } from "../../features/productsSlice";
 import { useAppDispatch } from "../../store/hook";
 import { Product } from "../../types/types";
@@ -17,18 +21,26 @@ const CartItem: React.FC<CartItemProps> = ({
   stockAvailable,
   quantity,
 }) => {
+  console.log(
+    stockAvailable - quantity,
+    "stockAvailable - quantitystockAvailable - quantity"
+  );
   const dispatch = useAppDispatch();
   const decreaseQuantityHandler = () => {
     dispatch(decreaseQuantity({ id }));
     dispatch(
-      updateProductStock({ id, stockAvailable: stockAvailable - quantity })
+      updateProductStock({ id, stockAvailable: stockAvailable - quantity + 1 })
     );
   };
   const increaseQuantityHandler = () => {
     dispatch(increaseQuantity({ id }));
     dispatch(
-      updateProductStock({ id, stockAvailable: stockAvailable - quantity })
+      updateProductStock({ id, stockAvailable: stockAvailable - quantity - 1 })
     );
+  };
+  const handleDeleteFromCart = () => {
+    dispatch(removeFromCart({ id }));
+    dispatch(updateProductStock({ id, stockAvailable: stockAvailable }));
   };
   return (
     <div className="flex items-center gap-4 bg-white rounded-lg shadow-md p-4">
@@ -78,7 +90,10 @@ const CartItem: React.FC<CartItemProps> = ({
             +
           </button>
         </div>
-        <button className="px-2 py-1 bg-red-500 text-white font-medium rounded-md hover:bg-red-600">
+        <button
+          onClick={handleDeleteFromCart}
+          className="px-2 py-1 bg-red-500 text-white font-medium rounded-md hover:bg-red-600"
+        >
           Sil
         </button>
       </div>
