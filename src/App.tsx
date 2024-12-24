@@ -8,22 +8,7 @@ const callback = (
   startTime,
   baseDuration,
   commitTime
-) => {
-  console.log(
-    "id " +
-      id +
-      " startTime " +
-      startTime +
-      " actualDuration " +
-      actualDuration +
-      " baseDuration " +
-      baseDuration +
-      " commitTime " +
-      commitTime +
-      " phase " +
-      phase
-  );
-};
+) => {};
 export default function App() {
   const element = useRoutes(routes);
   return (
