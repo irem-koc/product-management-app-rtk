@@ -8,6 +8,7 @@ export const useIsLoading = () => {
     const isMutating = Object.values(state.api.mutations).some(
       (query) => query?.status === "pending"
     );
-    return isFetching || isMutating;
+    const isProductLoading = state.products.loading;
+    return isFetching || isMutating || isProductLoading;
   });
 };
