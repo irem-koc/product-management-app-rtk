@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router";
 import { addToCart } from "../../features/cartSlice";
-import { useAppDispatch } from "../../store/hook";
 import { updateProductStock } from "../../features/productsSlice";
+import { useAppDispatch } from "../../store/hook";
 
 const ProductCard: React.FC<Product> = ({
   id,
