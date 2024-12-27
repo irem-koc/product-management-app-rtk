@@ -1,13 +1,30 @@
 import CartItem from "../../components/CartItem/CartItem";
-import { useAppSelector } from "../../store/hook";
+import { resetCard } from "../../features/cartSlice";
+import { updateProductStock } from "../../features/productsSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hook";
 
 const Cart: React.FC = () => {
   const { items: carts } = useAppSelector((state) => state.carts);
-
+  const dispatch = useAppDispatch();
   const totalAmount = (carts || []).reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+  const handleResetCart = () => {
+    carts.forEach((product) => {
+      const updatedStock = product.stockAvailable + product.quantity;
+      dispatch(
+        updateProductStock({ id: product.id, stockAvailable: updatedStock })
+      );
+    });
+    dispatch(resetCard(carts));
+    carts.forEach((product) => {
+      const defaultStock = product.stockAvailable || 0;
+      dispatch(
+        updateProductStock({ id: product.id, stockAvailable: defaultStock })
+      );
+    });
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -50,7 +67,10 @@ const Cart: React.FC = () => {
               <button className="mt-4 w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300">
                 Satın Al
               </button>
-              <button className="mt-4 w-full py-2 px-4 border border-red-500 bg-white text-red-500 font-semibold rounded-lg shadow-md hover:bg-red-600 hover:text-white transition-colors duration-300">
+              <button
+                onClick={handleResetCart}
+                className="mt-4 w-full py-2 px-4 border border-red-500 bg-white text-red-500 font-semibold rounded-lg shadow-md hover:bg-red-600 hover:text-white transition-colors duration-300"
+              >
                 Sepeti Temizle
               </button>
             </div>
