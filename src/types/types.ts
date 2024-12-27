@@ -17,3 +17,8 @@ export type Category = {
   category: string;
   search: string;
 };
+export type Pagination = {
+  page: number;
+  total: number;
+  size: number;
+};
