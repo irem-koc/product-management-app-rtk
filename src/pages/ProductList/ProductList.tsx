@@ -26,13 +26,11 @@ const ProductList = () => {
         <>
           {filteredProducts?.length > 0 ? (
             <>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((productItem: Product) => (
-                  <>
-                    <li key={productItem.id}>
-                      <ProductCard {...productItem} />
-                    </li>
-                  </>
+                  <li key={productItem.id}>
+                    <ProductCard {...productItem} />
+                  </li>
                 ))}
               </ul>
               <Pagination />
