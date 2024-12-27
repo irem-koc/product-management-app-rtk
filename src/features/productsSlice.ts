@@ -67,7 +67,7 @@ const productsSlice = createSlice({
 
     updateProductStock: (
       state,
-      action: PayloadAction<{ id: number; stockAvailable: number }>
+      action: PayloadAction<{ id: string; stockAvailable: number }>
     ) => {
       const product = state.filteredProducts.find(
         (p) => p.id === action.payload.id
@@ -84,7 +84,28 @@ const productsSlice = createSlice({
       state.filteredProducts = state.products.slice(startIndex, endIndex);
     },
     addProduct: (state, action: PayloadAction<Product>) => {
-      console.log(action.payload, " added");
+      state.products.unshift(action.payload);
+      state.filteredProducts.unshift(action.payload);
+
+      const total = Math.ceil(
+        state.filteredProducts.length / state.pagination.size
+      );
+      state.pagination.total = total;
+
+      if (state.pagination.page > total) {
+        state.pagination.page = total;
+      }
+
+      const startIndex = (state.pagination.page - 1) * state.pagination.size;
+      const endIndex = startIndex + state.pagination.size;
+      state.filteredProducts = state.products.slice(startIndex, endIndex);
+    },
+    toggleFavorite: (state, action: PayloadAction<string>) => {
+      state.filteredProducts = state.filteredProducts.map((item) =>
+        item.id === action.payload
+          ? { ...item, isFavorite: !item.isFavorite }
+          : item
+      );
     },
   },
   extraReducers: (builder) => {
@@ -94,7 +115,9 @@ const productsSlice = createSlice({
         if (Array.isArray(action.payload)) {
           state.products = action.payload.map((item: Product) => ({
             ...item,
+            id: item.id.toString(),
             stockAvailable: Math.floor(Math.random() * 20) + 1,
+            isFavorite: false,
           }));
 
           state.pagination.total = Math.ceil(
@@ -124,6 +147,7 @@ export const {
   updateProductStock,
   handleChange,
   addProduct,
+  toggleFavorite,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;
