@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router";
 import { addToCart } from "../../features/cartSlice";
-import { updateProductStock } from "../../features/productsSlice";
+import {
+  toggleFavorite,
+  updateProductStock,
+} from "../../features/productsSlice";
 import { useAppDispatch } from "../../store/hook";
 
 const ProductCard: React.FC<Product> = ({
@@ -21,7 +24,9 @@ const ProductCard: React.FC<Product> = ({
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
-  const toggleFavorite = () => {};
+  const handleFavorite = () => {
+    dispatch(toggleFavorite(id));
+  };
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
@@ -45,14 +50,15 @@ const ProductCard: React.FC<Product> = ({
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
+
   return (
     <div>
       <div className="overflow-scroll flex flex-col items-start justify-between max-w-sm h-[780px] p-4 border rounded-lg shadow-md bg-white transform transition duration-300 hover:scale-105 hover:shadow-lg hover:cursor-pointer">
-        <Link to={`products/${id}`}>
+        <Link to={!isNaN(Number(id)) ? `products/${id}` : ""}>
           <img
             src={image}
             alt={title}
-            className="w-full hover:opacity-70 h-44 object-contain my-4 transition duration-300"
+            className="mx-auto w-full hover:opacity-70 h-44 object-contain my-4 transition duration-300"
           />
           <h2 className="text-lg font-semibold text-gray-800 transition-colors duration-300 hover:text-blue-600">
             {title}
@@ -120,7 +126,7 @@ const ProductCard: React.FC<Product> = ({
         </button>
 
         <button
-          onClick={toggleFavorite}
+          onClick={handleFavorite}
           className="absolute top-4 right-4 text-red-600 hover:text-red-800 transition-colors duration-300"
         >
           {isFavorite ? (
